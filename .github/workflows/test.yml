@@ -1,0 +1,12 @@
+name:"test the code"
+
+on:
+  push
+
+jobs:
+  muthu:
+    runs-on: ubuntu-latest
+
+  steps:
+    - step:test the workflow
+      run: ls -al
