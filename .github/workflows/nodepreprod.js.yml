@@ -1,0 +1,61 @@
+##
+
+name: Pre-production Workflow
+
+on:
+  workflow_run:
+    workflows: ["Testing Workflow"]
+    types:
+      - completed
+  push:
+    branches:
+      - Preprod
+jobs:
+  build:
+    runs-on: pre
+    strategy:
+      matrix:
+        node-version: [18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+
+      - name: Debug
+        run: |
+          pwd
+          ls -la
+
+      - name: Install backend dependencies
+        run: |
+          cd server
+          pwd
+          npm ci --verbose
+          cp /home/ubuntu/preprod-key/server/.env /home/ubuntu/pro-runner/_work/BROMAG_BOOKS/BROMAG_BOOKS/server
+          ls -la
+
+      - name: Install frontend dependencies
+        run: |
+          cd client
+          cp /home/ubuntu/preprod-key/client/.env  /home/ubuntu/pro-runner/_work/BROMAG_BOOKS/BROMAG_BOOKS/client
+          npm ci --verbose
+          ls -la
+
+      - name: Build and test backend
+        run: |
+          cd server
+          pm2 restart preprod || echo "Failed to restart index.js"
+ 
+      - name: Build and test frontend
+        run: |
+          cd client
+          npm run build
+          sudo systemctl restart nginx
+  #notify:
+  #  runs-on: ubuntu-latest
+  #  needs: build
+  #  steps:
+  #    - name: Send notification
+  #      run: echo "Developer branch build and tests succeeded! Please review the changes."
