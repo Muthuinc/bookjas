@@ -18,7 +18,7 @@ jobs:
       - name: build
         run: |
         cd client
-        npm install
+        npm ci --verbose
         npm run build
       
     
