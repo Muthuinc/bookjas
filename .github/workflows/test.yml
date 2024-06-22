@@ -1,12 +1,17 @@
-name: test the code
+name: checktheworkflow
 
 on:
   push
 
 jobs:
-  muthu:
+  firstjob:
     runs-on: ubuntu-latest
-
-  steps:
-    - uses: actions/checkout@v3
+    steps:
+      - name: first job
+        run: echo "hello world"
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: pwd
+        run: ls -al
+      
     
