@@ -15,10 +15,13 @@ jobs:
         run: ls -al
       - name: set up node
         uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
       - name: build
         run: |
         cd client
         npm ci --verbose
         npm run build
+        ls
       
     
