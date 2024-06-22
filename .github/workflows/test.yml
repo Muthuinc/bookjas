@@ -1,25 +1,16 @@
-name: checktheworkflow
+name: Node.js CI
 
-on:
-  push
+on: [push]
 
 jobs:
-  firstjob:
+  build:
+
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: pwd
-        run: ls -al
-      - name: set up node
+      - uses: actions/checkout@v4
+      - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-      - name: build
-        run: |
-        cd client
-        npm ci --verbose
-        npm run build
-        ls
-      
-    
+      - run: cd client && npm ci && npm run build
